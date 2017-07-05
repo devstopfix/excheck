@@ -43,22 +43,12 @@ defmodule ExCheck do
     case :triq.check(target, iterations || default_iterations) do
       true ->
         :ok
-      false ->
+      {:EXIT, %{__struct__: _, message: _} = error} ->
         example = :triq.counterexample()
-        {:error, %ExCheck.Error{message: "check failed: Counterexample: #{inspect example}"}}
-      {:EXIT, %{__struct__: _, message: _} = e} ->
-        example = :triq.counterexample()
-        {:error, e}
+        raise ExCheck.Error, result: error, counterexample: example
       error ->
         example = :triq.counterexample()
-        {:error, %ExCheck.Error{message: "check failed: #{inspect error}. Counterexample: #{inspect example}"}}
-    end
-  end
-
-  def check!(target, iterations \\ nil) do
-    case check(target, iterations) do
-      :ok -> :ok
-      {:error, e} -> raise e
+        raise ExCheck.Error, result: error, counterexample: example
     end
   end
 end

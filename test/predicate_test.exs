@@ -1,12 +1,13 @@
 defmodule ExCheck.PredicateTest do
   use ExUnit.Case, async: false
   use ExCheck
-  import ExUnit.CaptureIO
+  require Logger
+  import ExUnit.CaptureLog
 
   property :implies do
     for_all x in int() do
       implies x >= 0 do
-        x >= 0
+        x == :ok
       end
     end
   end
@@ -19,7 +20,7 @@ defmodule ExCheck.PredicateTest do
 
   def prop_always_fail do
     for_all x in int() do
-      when_fail(:io.format("Failed value X = ~p", [x])) do
+      when_fail(Logger.debug("Failed value X = #{inspect x}")) do
         false
       end
     end
@@ -29,7 +30,7 @@ defmodule ExCheck.PredicateTest do
     for_all l in list(int()) do
       implies l != [] do
         for_all i in elements(l) do
-          when_fail(:io.format("Failed value L = ~p, I = ~p~n", [l,i])) do
+          when_fail(Logger.debug("Failed value L = ~#{inspect l}, I = #{inspect i}")) do
             :lists.member(i, :lists.delete(i, l)) == false
           end
         end
@@ -38,14 +39,22 @@ defmodule ExCheck.PredicateTest do
   end
 
   test "always fail property" do
-    assert capture_io(fn ->
-      ExCheck.check(prop_always_fail())
+    assert capture_log(fn ->
+      try do
+        ExCheck.check(prop_always_fail())
+      rescue ExCheck.Error ->
+        :ok
+      end
     end) =~ "Failed value X ="
   end
 
   test "sometimes fail property" do
-    assert capture_io(fn ->
-      ExCheck.check(prop_sometimes_fail())
+    assert capture_log(fn ->
+      try do
+        ExCheck.check(prop_sometimes_fail())
+      rescue ExCheck.Error ->
+        :ok
+      end
     end) =~ "Failed value L ="
   end
 
@@ -67,8 +76,8 @@ defmodule ExCheck.PredicateTest do
   end
 
   test "timeout fail property" do
-    assert_raise(ExCheck.Error, ~r/check failed: {:EXIT, {:timeout, 100}}/, fn ->
-      ExCheck.check!(prop_timeout())
+    assert_raise(ExCheck.Error, ~r/{:EXIT, {:timeout, 100}}/, fn ->
+      ExCheck.check(prop_timeout())
     end)
   end
 
@@ -83,8 +92,8 @@ defmodule ExCheck.PredicateTest do
   end
 
   test "exception fail property" do
-    assert_raise(SampleError, "sample message", fn ->
-      ExCheck.check!(prop_exception())
+    assert_raise(ExCheck.Error, ~r/SampleError{message: "sample message"}/, fn ->
+      ExCheck.check(prop_exception())
     end)
   end
 

@@ -19,7 +19,7 @@ defmodule ExCheck.Mixfile do
   # Configuration for the OTP application
   def application do
     [
-      applications: [:triq],
+      applications: [:triq, :logger],
       mod: {ExCheck, []}
     ]
   end
