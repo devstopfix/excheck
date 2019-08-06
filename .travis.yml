@@ -10,11 +10,13 @@ elixir:
   - 1.7
   - 1.8
   - 1.9
-otp_release:
-  - 18.1
+# otp_release:
+#   - 18.1
 script:
-  - "MIX_ENV=test mix do deps.get, compile, coveralls.travis"
-after_script:
+  - "MIX_ENV=test mix do deps.get, compile"
+  # - "MIX_ENV=test mix do deps.get, compile, coveralls.travis"
+
+  after_script:
   - mix deps.get --only docs
   - MIX_ENV=docs mix inch.report
 

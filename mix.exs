@@ -4,15 +4,15 @@ defmodule ExCheck.Mixfile do
   def project do
     [ app: :excheck,
       name: "ExCheck",
-      source_url: "https://github.com/devstopfix/ExCheck.git",
+      source_url: "https://github.com/devstopfix/excheck",
       homepage_url: "https://github.com/parroty/ExCheck.git",
-      version: "0.6.1",
+      version: "0.7.0",
       elixir: "~> 1.0",
       deps: deps(),
       description: description(),
-      package: package(),
-      test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test]
+      package: package()#,
+      # test_coverage: [tool: ExCoveralls],
+      # preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test]
     ]
   end
 
@@ -25,7 +25,7 @@ defmodule ExCheck.Mixfile do
   # { :foobar, "~> 0.1", git: "https://github.com/elixir-lang/foobar.git" }
   def deps do
     [
-      {:excoveralls, "~> 0.5", only: :test},
+      # {:excoveralls, "~> 0.5", only: :test},
       {:triq, "~> 1.2", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
       {:inch_ex, only: :docs}
