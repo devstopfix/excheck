@@ -4,9 +4,9 @@ defmodule ExCheck.Mixfile do
   def project do
     [ app: :excheck,
       name: "ExCheck",
-      source_url: "https://github.com/parroty/ExCheck.git",
+      source_url: "https://github.com/devstopfix/ExCheck.git",
       homepage_url: "https://github.com/parroty/ExCheck.git",
-      version: "0.6.0",
+      version: "0.6.1",
       elixir: "~> 1.0",
       deps: deps(),
       description: description(),
