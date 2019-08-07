@@ -12,7 +12,7 @@ First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. 
 ```Elixir
   defp deps do
     [
-      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.0", only: :test},
+      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.1", only: :test},
       {:triq, "~> 1.2"}
     ]
   end
@@ -23,9 +23,9 @@ You need to have erlang-eunit installed in order to build triq.
 and add the following to test_helper.exs:
 
 ```Elixir
-ExCheck.start
+ExCheck.start()
 # ... other helper functions
-ExUnit.start
+ExUnit.start()
 ```
 
 ### Configuration
@@ -153,6 +153,16 @@ The following generators defined in :triq are imported through "use ExCheck" sta
 
 - It's a trial implementation, and has limited functionalities yet.
 - Files in test folder contains some more property examples.
+
+Issues closed:
+
+* [43](https://github.com/parroty/excheck/issues/43)
+
+### Credits
+
+- [parroty](https://github.com/parroty) for authoring this library
+- [triq developers](https://gitlab.com/triq/triq/-/project_members) for the core library
+- [luc-tielen](https://github.com/luc-tielen) for bug fixes
 
 
 [triq]: https://hex.pm/packages/triq
