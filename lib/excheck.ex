@@ -50,7 +50,7 @@ defmodule ExCheck do
         example = :triq.counterexample()
         {:error, %ExCheck.Error{message: "check failed: Counterexample: #{inspect example}"}}
       {:EXIT, %{__struct__: _, message: _} = e} ->
-        example = :triq.counterexample()
+        _example = :triq.counterexample()
         {:error, e}
       error ->
         example = :triq.counterexample()

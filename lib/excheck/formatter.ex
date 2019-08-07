@@ -50,7 +50,9 @@ defmodule ExCheck.Formatter do
     tests_counter + ExCheck.TriqAgent.get_tests_count
   end
 
-  defp update_tests_counter(tests_counter) when is_map(tests_counter) do
+  defp update_tests_counter(%{test: _} = tests_counter) when is_map(tests_counter) do
     %{tests_counter | test: tests_counter.test + ExCheck.TriqAgent.get_tests_count}
   end
+
+  defp update_tests_counter(m) when is_map(m), do: m
 end

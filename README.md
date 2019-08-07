@@ -12,7 +12,7 @@ First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. 
 ```Elixir
   defp deps do
     [
-      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.4", only: :test},
+      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.5", only: :test},
       {:triq, "~> 1.3"}
     ]
   end
