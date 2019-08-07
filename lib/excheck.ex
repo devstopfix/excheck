@@ -3,7 +3,7 @@ defmodule ExCheck do
 
   @moduledoc """
   Provides QuickCheck style testing feature.
-  add 'use ExCheck' in the ExUnit test files.
+  Add `use ExCheck` after `use ExUnit.Callbacks` in the test files.
   """
 
   defmacro __using__(_opts \\ []) do
@@ -11,7 +11,6 @@ defmodule ExCheck do
       import ExCheck.Predicate
       import ExCheck.Statement
       use ExCheck.Generator
-      use ExUnit.Callbacks
 
       setup(context) do
         {:ok, context}

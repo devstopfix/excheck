@@ -7,7 +7,7 @@ defmodule ExCheck.Mixfile do
       name: "ExCheck",
       source_url: "https://github.com/devstopfix/excheck",
       homepage_url: "https://github.com/parroty/ExCheck.git",
-      version: "0.7.5",
+      version: "0.7.6",
       elixir: "~> 1.5",
       deps: deps(),
       description: description(),

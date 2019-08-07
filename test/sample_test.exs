@@ -6,9 +6,10 @@ defmodule ExCheck.SampleTest do
     @moduledoc """
     Sample logic to be tested by ExCheck (refer to sample_test.exs for tests).
     """
+    use ExUnit.Callbacks
     use ExCheck
 
-    @doc "concatinate the list."
+    @doc "concatenate the list."
     def concat(x, y) do
       x ++ y
     end

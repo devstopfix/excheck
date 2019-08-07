@@ -5,14 +5,14 @@ It uses Erlang's [triq](https://gitlab.com/triq/triq) library for underlying che
 
 This is a fork of the original [Excheck by Parroty](https://github.com/parroty/excheck) containing fixes and PRs by `luc-tielen` and `obrok`. It is backwards compatible to [Elixir 1.6][elixirv].
 
-### Installation
+## Installation
 
 First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. Link to the github tag as the fork is not yet available in hex.
 
 ```Elixir
   defp deps do
     [
-      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.5", only: :test},
+      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.6", only: :test},
       {:triq, "~> 1.3"}
     ]
   end
@@ -40,10 +40,11 @@ use Mix.Config
 config :excheck, :number_iterations, 200
 ```
 
-### Usage
-The following is an testing example. `ExCheck.SampleTest` is the testing code for `ExCheck.Sample`.
+## Usage
 
-#### Test
+The following is an testing example. [sample_test.exs](test/sample_test.exs) is the testing code for [sample.ex](lib/excheck/sample.ex).
+
+### Test
 
 ```Elixir
 defmodule ExCheck.SampleTest do
@@ -91,10 +92,13 @@ defmodule ExCheck.SampleTest do
 end
 ```
 
-#### Code
+### Unit under test
+
+See [sample.ex](lib/excheck/sample.ex):
 
 ```Elixir
 defmodule ExCheck.Sample do
+
   @moduledoc """
   Sample logic to be tested by ExCheck (refer to sample_test.exs for tests)
   """
@@ -111,17 +115,18 @@ defmodule ExCheck.Sample do
 end
 ```
 
-#### Run
+### Run
 
 ```Shell
  mix test test/sample_test.exs
-..................................................................................................................................................................................................................xxx....x.xx..xxx.x.xx.xx..x...x..x..xx.xx..xx.xx.x..x.x..x..x......x.xx............x.x..x..x...xxx..x..x..xx.x..xx.xx.x......x.xxx.xx..xx.x.x.x.xx.x.xx......xx..xxxx..x....xxx.xxxxx.xxxxx..xx...........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+....................................................................................................................................xxx....x.xx..xxx.x.xx.xx..x...x..x..xx.xx..xx.xx.x..x.x..x..x......x.xx............x.x..x..x...xxx..x..x..xx.x..xx.xx.x......x.xxx.xx..xx.x.x.x.xx.x.xx......xx..xxxx..x....xxx.xxxxx.xxxxx..xx.......................................................................................................................................................................
 
 Finished in 0.2 seconds (0.1s on load, 0.08s on tests)
 948 tests, 0 failures
 ```
 
-You can also add the optional flag --trace to get additional output
+You can also add the optional flag `--trace` to get additional output.
+
 ```Shell
 mix test test/sample_test.exs --trace
 
@@ -138,16 +143,15 @@ Finished in 0.1 seconds (0.1s on load, 0.06s on tests)
 942 tests, 0 failures
 ```
 
-
 There are some more examples at <a href="https://github.com/parroty/excheck/tree/master/test" target="_blank">test</a> directory.
 
 ### Generators
-The following generators defined in :triq are imported through "use ExCheck" statement.
+
+The following generators defined in :triq are imported through the `use ExCheck` statement:
 
 - list/1, tuple/1, int/0, int/1, int/2, byte/0, real/0, sized/1, elements/1, any/0, atom/0, atom/1, choose/2, oneof/1, frequency/1, bool/0, char/0, return/1, vector/2, binary/1, binary/0, non_empty/1, resize/2, non_neg_integer/0, pos_integer/0,
 - unicode_char/0, unicode_string/0, unicode_string/1, unicode_binary/0, unicode_binary/1, unicode_binary/2, unicode_characters/0, unicode_characters/1,
 - bind/2, bindshrink/2, suchthat/2, pick/2, shrink/2, sample/1, sampleshrink/1, seal/1, open/1, peek/1, domain/3, shrink_without_duplicates/1
-
 
 ### Notes
 
@@ -158,13 +162,13 @@ Issues closed:
 
 * [36](https://github.com/parroty/excheck/issues/36) Missing counter examples after 0.5.2
 * [43](https://github.com/parroty/excheck/issues/43)
+* [46](https://github.com/parroty/excheck/issues/46) removes *previous clause at line 1 always matches* warning on `use ExCheck`
 
 ### Credits
 
 - [parroty](https://github.com/parroty) for authoring this library
 - [triq developers](https://gitlab.com/triq/triq/-/project_members) for the core library
 - [luc-tielen](https://github.com/luc-tielen) and [aerosol](https://github.com/aerosol) for bug fixes
-
 
 [triq]: https://hex.pm/packages/triq
 [elixirv]: https://github.com/elixir-lang/elixir/blob/master/lib/elixir/pages/Compatibility%20and%20Deprecations.md
