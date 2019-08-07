@@ -15,9 +15,8 @@ defmodule ExCheck.SampleTest do
 
     @doc "push element in the list."
     def push(x, y) do
-      [x|y]
+      [x | y]
     end
-
 
     @doc false
     def prop_concat_list do
