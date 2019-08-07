@@ -7,7 +7,7 @@ defmodule ExCheck.Mixfile do
       name: "ExCheck",
       source_url: "https://github.com/devstopfix/excheck",
       homepage_url: "https://github.com/parroty/ExCheck.git",
-      version: "0.7.1",
+      version: "0.7.3",
       elixir: "~> 1.5",
       deps: deps(),
       description: description(),
@@ -27,7 +27,7 @@ defmodule ExCheck.Mixfile do
   def deps do
     [
       # {:excoveralls, "~> 0.5", only: :test},
-      {:triq, "~> 1.2", only: [:dev, :test]},
+      {:triq, "~> 1.3", only: [:dev, :test]},
       {:ex_doc, "~> 0.12", only: :dev},
       {:inch_ex, only: :docs}
     ]

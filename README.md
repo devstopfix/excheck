@@ -3,17 +3,17 @@
 Property-based testing for Elixir (QuickCheck style).
 It uses Erlang's [triq](https://gitlab.com/triq/triq) library for underlying checking engine, and ExCheck's modules provide wrapper macros for ExUnit tests.
 
-This is a fork of the original [Excheck by Parroty](https://github.com/parroty/excheck) containing fixes and PRs by `luc-tielen` and `obrok`. It is backwards compatible to [Elixir 1.5][elixirv].
+This is a fork of the original [Excheck by Parroty](https://github.com/parroty/excheck) containing fixes and PRs by `luc-tielen` and `obrok`. It is backwards compatible to [Elixir 1.6][elixirv].
 
 ### Installation
 
-First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. Link to the github fork as the fork is not yet available in hex.
+First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. Link to the github tag as the fork is not yet available in hex.
 
 ```Elixir
   defp deps do
     [
-      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.1", only: :test},
-      {:triq, "~> 1.2"}
+      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.3", only: :test},
+      {:triq, "~> 1.3"}
     ]
   end
 ```
