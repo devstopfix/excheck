@@ -14,8 +14,6 @@ defmodule ExCheck do
       use ExUnit.Callbacks
 
       setup(context) do
-        # Redirect all output first to IOServer process before test starts
-        ExCheck.IOServer.redirect(self())
         {:ok, context}
       end
     end
@@ -23,8 +21,8 @@ defmodule ExCheck do
 
   @doc "Starts the ExCheck application."
   def start do
+    # {:ok, :triq_rnd} = :triq_rand_compat.init('triq_rnd')
     ExUnit.configure(formatters: [ExCheck.Formatter])
-    Application.ensure_all_started(:excheck)
   end
 
   @doc "Starts the ExCheck application."
@@ -32,7 +30,7 @@ defmodule ExCheck do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(ExCheck.IOServer, [])
+      worker(ExCheck.TriqAgent, [])
     ]
 
     Supervisor.start_link(children, strategy: :one_for_one)
@@ -47,19 +45,23 @@ defmodule ExCheck do
 
     case :triq.check(target, iterations || default_iterations) do
       true ->
-        true
-
+        :ok
       false ->
-        false
-
-      {:EXIT, %{__struct__: ExUnit.AssertionError} = error} ->
-        raise ExUnit.AssertionError, message: error.message
-
-      {:EXIT, %{__struct__: type, message: msg}} ->
-        raise ExCheck.Error, message: "error raised: (#{type}) #{msg}"
-
+        example = :triq.counterexample()
+        {:error, %ExCheck.Error{message: "check failed: Counterexample: #{inspect example}"}}
+      {:EXIT, %{__struct__: _, message: _} = e} ->
+        example = :triq.counterexample()
+        {:error, e}
       error ->
-        raise ExCheck.Error, message: "check failed: #{inspect(error)}"
+        example = :triq.counterexample()
+        {:error, %ExCheck.Error{message: "check failed: #{inspect error}. Counterexample: #{inspect example}"}}
+    end
+  end
+
+  def check!(target, iterations \\ nil) do
+    case check(target, iterations) do
+      :ok -> :ok
+      {:error, e} -> raise e
     end
   end
 end

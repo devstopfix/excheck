@@ -12,7 +12,7 @@ First add ExCheck and [triq][triq] to your project's dependencies in `mix.exs`. 
 ```Elixir
   defp deps do
     [
-      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.3", only: :test},
+      {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.4", only: :test},
       {:triq, "~> 1.3"}
     ]
   end
@@ -156,13 +156,14 @@ The following generators defined in :triq are imported through "use ExCheck" sta
 
 Issues closed:
 
+* [36](https://github.com/parroty/excheck/issues/36) Missing counter examples after 0.5.2
 * [43](https://github.com/parroty/excheck/issues/43)
 
 ### Credits
 
 - [parroty](https://github.com/parroty) for authoring this library
 - [triq developers](https://gitlab.com/triq/triq/-/project_members) for the core library
-- [luc-tielen](https://github.com/luc-tielen) for bug fixes
+- [luc-tielen](https://github.com/luc-tielen) and [aerosol](https://github.com/aerosol) for bug fixes
 
 
 [triq]: https://hex.pm/packages/triq
