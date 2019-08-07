@@ -7,7 +7,7 @@ defmodule ExCheck.Mixfile do
       source_url: "https://github.com/devstopfix/excheck",
       homepage_url: "https://github.com/parroty/ExCheck.git",
       version: "0.7.0",
-      elixir: "~> 1.0",
+      elixir: "~> 1.5",
       deps: deps(),
       description: description(),
       package: package()#,
@@ -41,6 +41,7 @@ defmodule ExCheck.Mixfile do
   defp package do
     [ maintainers: ["parroty"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/parroty/excheck"} ]
+      links: %{"GitHub" => "https://github.com/parroty/excheck",
+               "Fork" => "https://github.com/devstopfix/excheck"} ]
   end
 end
