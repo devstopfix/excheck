@@ -35,8 +35,8 @@ defmodule ExCheck.Statement do
   end
 
   @doc """
-  Verify property and return the result as true/faluse value.
-  It corresonds to triq#check_forall method.
+  Verify property and return the result as true/false value.
+  It corresponds to triq#check_forall method.
   """
   def verify_property({:"prop:forall", domain, _syntax, fun, _body}) do
     iterations = Application.get_env(:excheck, :number_iterations, 100)
