@@ -13,7 +13,7 @@ elixir:
 # otp_release:
 #   - 18.1
 script:
-  - "MIX_ENV=test mix do deps.get, compile"
+  - "MIX_ENV=test mix do deps.get, compile, test"
   # - "MIX_ENV=test mix do deps.get, compile, coveralls.travis"
 
 after_script:
