@@ -10,57 +10,68 @@ defmodule ExCheckTest do
   end
 
   property :list_counts do
-    for_all xs in list(int()), do: Enum.count(xs) >= 0
+    for_all(xs in list(int()), do: Enum.count(xs) >= 0)
   end
 
   property :square do
-    for_all x in int(), do: x * x >= 0
+    for_all(x in int(), do: x * x >= 0)
   end
 
   # specify iteration count for running test
   @tag iterations: 30
   property :square_with_iteration_parameter do
-    for_all x in int(), do: x * x >= 0
+    for_all(x in int(), do: x * x >= 0)
   end
 
   # generators
   property :boolean do
-    for_all b in bool(), do: is_boolean(b)
+    for_all(b in bool(), do: is_boolean(b))
   end
+
   property :atom do
-    for_all a in atom(), do: is_atom(a)
+    for_all(a in atom(), do: is_atom(a))
   end
+
   property :binary do
-    for_all b in binary(), do: is_binary(b)
+    for_all(b in binary(), do: is_binary(b))
   end
+
   property :real do
-    for_all r in real(), do: is_float(r)
+    for_all(r in real(), do: is_float(r))
   end
+
   property :byte do
-    for_all b in byte(), do: is_integer(b)
+    for_all(b in byte(), do: is_integer(b))
   end
+
   property :tuple do
-    for_all t in tuple(int()), do: is_tuple(t)
+    for_all(t in tuple(int()), do: is_tuple(t))
   end
+
   property :char do
-    for_all c in char(), do: is_integer(c)
+    for_all(c in char(), do: is_integer(c))
   end
+
   property :unicode_char do
-    for_all u in unicode_char(), do: is_integer(u)
+    for_all(u in unicode_char(), do: is_integer(u))
   end
+
   property :oneof do
-    for_all v in oneof([1, 2]), do: v == 1 or v == 2
+    for_all(v in oneof([1, 2]), do: v == 1 or v == 2)
   end
+
   property :frequency do
     for_all v in frequency([{10, :a}, {1, :b}]) do
       v == :a or v == :b
     end
   end
+
   property :pos_integer do
-    for_all v in pos_integer(), do: v > 0
+    for_all(v in pos_integer(), do: v > 0)
   end
+
   property :integer_min_max do
-    for_all v in int(10000, 20000), do: v >= 10000 and v <= 20000
+    for_all(v in int(10000, 20000), do: v >= 10000 and v <= 20000)
   end
 
   property :float_min_max do
@@ -71,15 +82,15 @@ defmodule ExCheckTest do
   end
 
   property :number do
-    for_all v in number(), do: is_integer(v) or is_float(v)
+    for_all(v in number(), do: is_integer(v) or is_float(v))
   end
 
   test :sample_boolean do
-    Enum.each(sample(bool()), &(assert is_boolean(&1)))
+    Enum.each(sample(bool()), &assert(is_boolean(&1)))
   end
 
   test :sample_integer do
-    Enum.each(sample(int()), &(assert is_integer(&1)))
+    Enum.each(sample(int()), &assert(is_integer(&1)))
   end
 
   test :pick_integer do
@@ -92,17 +103,21 @@ defmodule ExCheckTest do
     assert is_integer(v1) and is_integer(v2)
   end
 
-  defmodule State, do: defstruct foo: :bar
+  defmodule State, do: defstruct(foo: :bar)
 
   def state do
-    domain(:state, fn(self, size) ->
-      {_, value} = pick(atom(), size)
-      {self, %State{foo: value}}
-    end, fn
-    (self, size) ->
-      {_, value} = pick(atom(), max(size-2, 0))
-      {self, %State{foo: value}}
-    end)
+    domain(
+      :state,
+      fn self, size ->
+        {_, value} = pick(atom(), size)
+        {self, %State{foo: value}}
+      end,
+      fn
+        self, size ->
+          {_, value} = pick(atom(), max(size - 2, 0))
+          {self, %State{foo: value}}
+      end
+    )
   end
 
   property :my_domain_gen do

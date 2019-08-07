@@ -2,7 +2,8 @@ defmodule ExCheck.Mixfile do
   use Mix.Project
 
   def project do
-    [ app: :excheck,
+    [
+      app: :excheck,
       name: "ExCheck",
       source_url: "https://github.com/devstopfix/excheck",
       homepage_url: "https://github.com/parroty/ExCheck.git",
@@ -10,7 +11,7 @@ defmodule ExCheck.Mixfile do
       elixir: "~> 1.5",
       deps: deps(),
       description: description(),
-      package: package()#,
+      package: package()
       # test_coverage: [tool: ExCoveralls],
       # preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test]
     ]
@@ -39,9 +40,13 @@ defmodule ExCheck.Mixfile do
   end
 
   defp package do
-    [ maintainers: ["parroty"],
+    [
+      maintainers: ["parroty"],
       licenses: ["MIT"],
-      links: %{"GitHub" => "https://github.com/parroty/excheck",
-               "Fork" => "https://github.com/devstopfix/excheck"} ]
+      links: %{
+        "GitHub" => "https://github.com/parroty/excheck",
+        "Fork" => "https://github.com/devstopfix/excheck"
+      }
+    ]
   end
 end

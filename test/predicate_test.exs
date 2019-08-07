@@ -29,7 +29,7 @@ defmodule ExCheck.PredicateTest do
     for_all l in list(int()) do
       implies l != [] do
         for_all i in elements(l) do
-          when_fail(:io.format("Failed value L = ~p, I = ~p~n", [l,i])) do
+          when_fail(:io.format("Failed value L = ~p, I = ~p~n", [l, i])) do
             :lists.member(i, :lists.delete(i, l)) == false
           end
         end
@@ -39,14 +39,14 @@ defmodule ExCheck.PredicateTest do
 
   test "always fail property" do
     assert capture_io(fn ->
-      ExCheck.check(prop_always_fail())
-    end) =~ "Failed value X ="
+             ExCheck.check(prop_always_fail())
+           end) =~ "Failed value X ="
   end
 
   test "sometimes fail property" do
     assert capture_io(fn ->
-      ExCheck.check(prop_sometimes_fail())
-    end) =~ "Failed value L ="
+             ExCheck.check(prop_sometimes_fail())
+           end) =~ "Failed value L ="
   end
 
   property :trapexit do
@@ -68,10 +68,10 @@ defmodule ExCheck.PredicateTest do
 
   test "timeout fail property" do
     assert capture_io(fn ->
-      assert_raise(ExCheck.Error, "check failed: {:EXIT, {:timeout, 100}}", fn ->
-        ExCheck.check(prop_timeout())
-      end)
-    end) =~ "{'EXIT',{timeout,100}}"
+             assert_raise(ExCheck.Error, "check failed: {:EXIT, {:timeout, 100}}", fn ->
+               ExCheck.check(prop_timeout())
+             end)
+           end) =~ "{'EXIT',{timeout,100}}"
   end
 
   defmodule SampleError do
@@ -86,10 +86,14 @@ defmodule ExCheck.PredicateTest do
 
   test "exception fail property" do
     assert capture_io(fn ->
-      assert_raise(ExCheck.Error, "error raised: (Elixir.ExCheck.PredicateTest.SampleError) sample message", fn ->
-        ExCheck.check(prop_exception())
-      end)
-    end) =~ "Elixir.ExCheck.PredicateTest.SampleError"
+             assert_raise(
+               ExCheck.Error,
+               "error raised: (Elixir.ExCheck.PredicateTest.SampleError) sample message",
+               fn ->
+                 ExCheck.check(prop_exception())
+               end
+             )
+           end) =~ "Elixir.ExCheck.PredicateTest.SampleError"
   end
 
   property :excpetion do

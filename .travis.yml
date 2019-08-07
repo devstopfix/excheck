@@ -5,6 +5,10 @@ elixir:
   - 1.7
   - 1.6
   - 1.5
+
+before_script:
+  - if [[ "$TRAVIS_ELIXIR_VERSION" =~ "1.9" ]]; then mix format mix.exs "{config,lib,test}/**/*.{ex,exs}" --check-formatted; fi
+
 script:
   - "MIX_ENV=test mix do deps.get, compile, test"
   # - "MIX_ENV=test mix do deps.get, compile, coveralls.travis"

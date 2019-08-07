@@ -3,7 +3,7 @@ defmodule ExCheck.ErrorAgentTest do
   alias ExCheck.ErrorAgent, as: ErrAgent
 
   test "Starting and stopping agent" do
-    {:ok, agent} = ErrAgent.start_link
+    {:ok, agent} = ErrAgent.start_link()
     assert Process.alive?(agent)
     ErrAgent.stop(agent)
     refute Process.alive?(agent)
@@ -11,8 +11,8 @@ defmodule ExCheck.ErrorAgentTest do
 
   test "Adding and returning errors" do
     me = self()
-    other = spawn fn -> :ok end
-    {:ok, agent} = ErrAgent.start_link
+    other = spawn(fn -> :ok end)
+    {:ok, agent} = ErrAgent.start_link()
     # Errors could contain anything, using text for simplicity
     {err1, err2, err3, err4} = {"err1", "err2", "err3", "err4"}
 

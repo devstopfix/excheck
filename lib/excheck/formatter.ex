@@ -1,5 +1,5 @@
 defmodule ExCheck.Formatter do
-  @version140_or_later Version.compare(System.version, "1.4.0") in [:gt, :eq]
+  @version140_or_later Version.compare(System.version(), "1.4.0") in [:gt, :eq]
 
   if @version140_or_later do
     use GenServer
@@ -22,7 +22,6 @@ defmodule ExCheck.Formatter do
   end
 
   if @version140_or_later do
-
     @doc false
     def handle_cast(event = {:suite_finished, _run_us, _load_us}, config) do
       updated_tests_count = update_tests_counter(config.test_counter)
@@ -30,12 +29,11 @@ defmodule ExCheck.Formatter do
       print_property_test_errors()
       CF.handle_cast(event, new_cfg)
     end
+
     def handle_cast(event, config) do
       CF.handle_cast(event, config)
     end
-
   else
-
     @doc false
     def handle_event(event = {:suite_finished, _run_us, _load_us}, config) do
       updated_tests_count = update_tests_counter(config.tests_counter)
@@ -43,28 +41,29 @@ defmodule ExCheck.Formatter do
       print_property_test_errors()
       CF.handle_event(event, new_cfg)
     end
+
     def handle_event(event, config) do
       CF.handle_event(event, config)
     end
-
   end
 
   defp print_property_test_errors do
-    ExCheck.IOServer.errors
-    |> List.flatten
-    |> Enum.map(fn({msg, value_list}) ->
+    ExCheck.IOServer.errors()
+    |> List.flatten()
+    |> Enum.map(fn {msg, value_list} ->
       :io.format(msg, value_list)
     end)
   end
 
   defp update_tests_counter(tests_counter) when is_integer(tests_counter) do
-    total_tests = tests_counter + ExCheck.IOServer.total_tests
-    ExCheck.IOServer.reset_test_count
+    total_tests = tests_counter + ExCheck.IOServer.total_tests()
+    ExCheck.IOServer.reset_test_count()
     total_tests
   end
+
   defp update_tests_counter(tests_counter) when is_map(tests_counter) do
-    total_tests = %{tests_counter | test: tests_counter.test + ExCheck.IOServer.total_tests}
-    ExCheck.IOServer.reset_test_count
+    total_tests = %{tests_counter | test: tests_counter.test + ExCheck.IOServer.total_tests()}
+    ExCheck.IOServer.reset_test_count()
     total_tests
   end
 end

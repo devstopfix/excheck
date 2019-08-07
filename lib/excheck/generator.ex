@@ -25,7 +25,7 @@ defmodule ExCheck.Generator do
   """
   defmacro atom do
     quote do
-      oneof([:triq_dom.atom(), oneof([bool(), :nil])])
+      oneof([:triq_dom.atom(), oneof([bool(), nil])])
     end
   end
 end

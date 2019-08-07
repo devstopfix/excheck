@@ -7,10 +7,14 @@ defmodule ExCheck.IOServer do
   Process which manipulates IO output and forwards it to previous group leader.
   """
 
-  defstruct gl: :no_pid,     # Previous group leader process
-            pids: [],        # The pids from which we are redirecting output
-            tests: 0,        # Amount of triq property tests ran
-            enabled: false,  # Colors enabled in terminal?
+  # Previous group leader process
+  defstruct gl: :no_pid,
+            # The pids from which we are redirecting output
+            pids: [],
+            # Amount of triq property tests ran
+            tests: 0,
+            # Colors enabled in terminal?
+            enabled: false,
             agent: :no_pid
 
   @server __MODULE__
@@ -48,73 +52,93 @@ defmodule ExCheck.IOServer do
 
   @doc false
   def init(:ok) do
-    {:ok, agent} = ErrAgent.start_link
-    gl = Process.group_leader        # get previous group leader
-    {:ok, %State{gl: gl, enabled: IO.ANSI.enabled?, agent: agent}}
+    {:ok, agent} = ErrAgent.start_link()
+    # get previous group leader
+    gl = Process.group_leader()
+    {:ok, %State{gl: gl, enabled: IO.ANSI.enabled?(), agent: agent}}
   end
 
   @doc false
   def terminate(_reason, %State{gl: gl, pids: pids, agent: agent}) do
     for pid <- pids do
-      Process.group_leader(pid, gl)  # Revert back to old group leader
+      # Revert back to old group leader
+      Process.group_leader(pid, gl)
     end
+
     ErrAgent.stop(agent)
     :ok
   end
 
   @doc false
   def handle_call({:redirect, pid}, _from, state = %State{pids: pids}) do
-    Process.group_leader(pid, self())  # redirect all IO from pid to this process
+    # redirect all IO from pid to this process
+    Process.group_leader(pid, self())
     {:reply, :ok, %State{state | pids: [pid | pids]}}
   end
+
   def handle_call(:total_tests, _from, state = %State{tests: tests}) do
     {:reply, tests, state}
   end
+
   def handle_call(:reset_test_count, _from, state = %State{agent: agent}) do
-    agent |> ErrAgent.clear_errors
+    agent |> ErrAgent.clear_errors()
     {:reply, :ok, %State{state | tests: 0}}
   end
+
   def handle_call(:errors, _from, state = %State{agent: agent}) do
     response = ErrAgent.errors(agent)
     {:reply, response, state}
   end
+
   def handle_call(_msg, _from, state) do
     {:reply, :unknown_msg, state}
   end
 
   @doc false
-  def handle_info({:io_request, from, ref, 
-                  {:put_chars, _encoding, :io_lib, :format, [msg, value_list]}}, state) do
+  def handle_info(
+        {:io_request, from, ref, {:put_chars, _encoding, :io_lib, :format, [msg, value_list]}},
+        state
+      ) do
     # Receive all IO requests here
     new_state = handle_output(msg, value_list, from, state)
     from |> send({:io_reply, ref, :ok})
     {:noreply, new_state}
   end
-  def handle_info({:io_request, from, ref, 
-                  {:put_chars, :io_lib, :format, [msg, value_list]}}, state) do
+
+  def handle_info(
+        {:io_request, from, ref, {:put_chars, :io_lib, :format, [msg, value_list]}},
+        state
+      ) do
     # Receive all IO requests here
     new_state = handle_output(msg, value_list, from, state)
     from |> send({:io_reply, ref, :ok})
     {:noreply, new_state}
   end
-  def handle_info({:io_request, from, ref, 
-                  {:put_chars, _encoding, msg}}, state) do
+
+  def handle_info(
+        {:io_request, from, ref, {:put_chars, _encoding, msg}},
+        state
+      ) do
     # Receive all IO requests here
     new_state = handle_output(msg, [], from, state)
     from |> send({:io_reply, ref, :ok})
     {:noreply, new_state}
   end
-  def handle_info({:io_request, from, ref, 
-                  {:put_chars, msg}}, state) do
+
+  def handle_info(
+        {:io_request, from, ref, {:put_chars, msg}},
+        state
+      ) do
     # Receive all IO requests here
     new_state = handle_output(msg, [], from, state)
     from |> send({:io_reply, ref, :ok})
     {:noreply, new_state}
   end
+
   def handle_info(_msg, state) do
     # Unsupported message -> discarded
     # This means reading input is impossible with this IOServer.
-    {:noreply, state}   
+    {:noreply, state}
   end
 
   # Helper functions
@@ -124,38 +148,49 @@ defmodule ExCheck.IOServer do
     '.'
     |> colorize(:green, state.enabled)
     |> write(state)
+
     state
   end
+
   def handle_output('x', [], _from, state) do
     'x'
     |> colorize(:red, state.enabled)
     |> write(state)
+
     state
   end
+
   def handle_output('~nRan ~p tests~n', [amount], _from, state) do
     %State{state | tests: state.tests + amount - 1}
   end
+
   def handle_output('Testing ~p' ++ _rest, _value_list, _from, state) do
     # Filter this statement out, output shows up in ExUnit anyway
     # in case of failure
     state
   end
-  def handle_output(msg = ('~nFailed' ++ _rest), value_list, from, state) do
+
+  def handle_output(msg = '~nFailed' ++ _rest, value_list, from, state) do
     add_error_output(state, from, msg, value_list)
     state
   end
+
   def handle_output('Failed' ++ rest, value_list, from, state) do
-    add_error_output(state, from, '~nFailed' ++ rest, value_list)  # fix formatting..
+    # fix formatting..
+    add_error_output(state, from, '~nFailed' ++ rest, value_list)
     state
   end
+
   def handle_output(msg = 'Simplified' ++ _rest, value_list, from, state) do
     add_error_output(state, from, msg, value_list)
     state
   end
+
   def handle_output(msg = '\t~s = ~w~n' ++ _rest, value_list, from, state) do
     add_error_output(state, from, msg, value_list)
     state
   end
+
   def handle_output(msg, value_list, _from, state) do
     # Fallback: simply forward messages to old group leader.
     :io.format(state.gl, msg, value_list)
@@ -167,12 +202,11 @@ defmodule ExCheck.IOServer do
   end
 
   defp colorize(msg, color, enabled?) do
-    [IO.ANSI.format_fragment(color, enabled?), 
-      msg,
-      IO.ANSI.format_fragment(:reset, enabled?)] |> IO.iodata_to_binary
+    [IO.ANSI.format_fragment(color, enabled?), msg, IO.ANSI.format_fragment(:reset, enabled?)]
+    |> IO.iodata_to_binary()
   end
 
   defp write(msg, state) do
-    IO.write state.gl, msg
+    IO.write(state.gl, msg)
   end
 end

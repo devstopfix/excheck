@@ -6,10 +6,12 @@ defmodule ExCheck.Statement do
   @doc """
   Generate property method and ExUnit tests.
   """
-  defmacro property(message, [do: contents]) do
+  defmacro property(message, do: contents) do
     contents = Macro.escape(contents, unquote: true)
+
     quote bind_quoted: binding() do
       def unquote(:"prop_#{message}")(), do: unquote(contents)
+
       test :"#{message}_property", context do
         assert ExCheck.check(unquote(:"prop_#{message}")(), context[:iterations])
       end
@@ -19,11 +21,13 @@ defmodule ExCheck.Statement do
   @doc """
   Generate property method and ExUnit tests with var context.
   """
-  defmacro property(message, var, [do: contents]) do
-    var      = Macro.escape(var)
+  defmacro property(message, var, do: contents) do
+    var = Macro.escape(var)
     contents = Macro.escape(contents, unquote: true)
+
     quote bind_quoted: binding() do
       def unquote(:"prop_#{message}")(unquote(var)), do: unquote(contents)
+
       test :"#{message}_property", var do
         assert ExCheck.check(unquote(:"prop_#{message}")(var), var[:iterations])
       end
@@ -40,6 +44,7 @@ defmodule ExCheck.Statement do
   end
 
   defp verify_property(n, n, _domain, _fun, _count), do: true
+
   defp verify_property(n, nmax, domain, fun, count) do
     domain_size = 2 * 2 + n
     {_, sample} = :triq_dom.pick(domain, domain_size)
